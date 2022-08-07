@@ -8,6 +8,10 @@ class Server
     private const KEY_AND_VALUE_LENGTH = 2;
     private const SECONDS_PER_DAY      = 24000;
     private const REQUIRED_KEYS        = ['CurrentServerTime', 'CurrentPlayers'];
+    private const HOURS_PER_DAY        = 24;
+    private const SECONDS_PER_MINUTE   = 60;
+    private const STARTING_DAY         = 1;
+    private const FMOD_DIVISOR         = 1;
 
     private array $server = [];
     private float $day    = 0;
@@ -68,10 +72,10 @@ class Server
             }
         }
 
-        $this->day    = $this->server['CurrentServerTime'] / self::SECONDS_PER_DAY + 1;
+        $this->day    = $this->server['CurrentServerTime'] / self::SECONDS_PER_DAY + self::STARTING_DAY;
         $secondsOver  = $this->server['CurrentServerTime'] % self::SECONDS_PER_DAY;
-        $this->hour   = $secondsOver / (self::SECONDS_PER_DAY / 24);
-        $this->minute = fmod($this->hour, 1) * 60;
+        $this->hour   = $secondsOver / (self::SECONDS_PER_DAY / self::HOURS_PER_DAY);
+        $this->minute = fmod($this->hour, self::FMOD_DIVISOR) * self::SECONDS_PER_MINUTE;
 
         $this->isParsed = true;
 
