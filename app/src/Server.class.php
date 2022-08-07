@@ -80,10 +80,12 @@ class Server
 
     public function toHtml(): string
     {
-        ob_start();
         if (!$this->isParsed) {
             throw new \LogicException('Call parse() before.');
         }
+
+        ob_start();
+
         echo "<pre>\n";
         printf("<b>Tag:</b> %d <b>Zeit:</b> %02d:%02d\n", $this->day, $this->hour, $this->minute);
         printf("<b>Spieler online:</b> %d\n", $this->server['CurrentPlayers']);
