@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace markuszeller\server;
 
-class Server
+class Server implements \Stringable
 {
     private const KEY_AND_VALUE_LENGTH = 2;
     private const SECONDS_PER_DAY      = 24000;
@@ -96,5 +96,21 @@ class Server
         echo "</pre>\n";
 
         return (string) ob_get_clean();
+    }
+
+    public function __toString(): string
+    {
+        if (!$this->isParsed) {
+            throw new \LogicException('Call parse() before.');
+        }
+
+        $playerText = match ($this->server['CurrentPlayers']) {
+            "0" => 'ist kein',
+            "1" => 'ist ein',
+            default => "sind {$this->server['CurrentPlayers']}",
+        };
+        return
+            sprintf("Tag %d, Zeit %d Uhr %d. ", $this->day, $this->hour, $this->minute) .
+            sprintf("Es %s Spieler online.", $playerText);
     }
 }
